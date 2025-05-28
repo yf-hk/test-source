@@ -6,6 +6,10 @@ on:
       - main
       - master
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   tag:
     runs-on: ubuntu-latest
@@ -109,16 +113,16 @@ jobs:
           echo "Created and pushed tag: $NEW_VERSION"
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.new_version.outputs.new_version }}
-          release_name: Release ${{ steps.new_version.outputs.new_version }}
-          body: |
-            Auto-generated release for ${{ steps.new_version.outputs.new_version }}
-            
-            Changes since last release:
-            ${{ github.event.head_commit.message }}
-          draft: false
-          prerelease: false 
+        run: |
+          NEW_VERSION="${{ steps.new_version.outputs.new_version }}"
+          
+          # Create release using GitHub CLI
+          gh release create "$NEW_VERSION" \
+            --title "Release $NEW_VERSION" \
+            --notes "Auto-generated release for $NEW_VERSION
+
+          Changes since last release:
+          ${{ github.event.head_commit.message }}" \
+            --latest 
