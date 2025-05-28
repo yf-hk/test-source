@@ -45,3 +45,4 @@ If no tags exist in the repository, the workflow will start with `v0.0.1` for th
 - The workflow uses `GITHUB_TOKEN` which is automatically provided by GitHub Actions
 - No additional setup or secrets are required
 - The workflow runs on Ubuntu latest
+1
